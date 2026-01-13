@@ -1,34 +1,12 @@
 import Link from "next/link";
 import { Phone, Globe, Clock, Zap, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Navbar } from "@/components/Navbar";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       {/* Navigation */}
-      <nav className="border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
-              <Phone className="h-6 w-6 text-blue-400" />
-              <span className="text-xl font-bold text-white">Assistly AI</span>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link
-                href="/login"
-                className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                Sign In
-              </Link>
-              <Link
-                href="/dashboard"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                Get Started
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -52,9 +30,12 @@ export default function Home() {
               Start Free Trial
               <ArrowRight className="h-5 w-5" />
             </Link>
-            <button className="border border-gray-700 hover:border-gray-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all">
-              Watch Demo
-            </button>
+            <a
+              href="mailto:clairesunyu@gmail.com?subject=Demo Request - Assistly AI"
+              className="border border-gray-700 hover:border-gray-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all inline-block"
+            >
+              Request a Demo
+            </a>
           </div>
         </div>
 
@@ -149,7 +130,7 @@ export default function Home() {
                 Terms of Service
               </Link>
               <p className="text-gray-400">
-                © 2024 Assistly AI. All rights reserved.
+                © 2026 Assistly AI. All rights reserved.
               </p>
             </div>
           </div>

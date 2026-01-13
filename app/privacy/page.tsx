@@ -63,6 +63,9 @@ export default function PrivacyPolicyPage() {
               <p className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 font-semibold text-white">
                 No mobile information will be shared with third parties/affiliates for marketing/promotional purposes. All other categories exclude text messaging originator opt-in data and consent; this information will not be shared with any third parties.
               </p>
+              <p className="mt-4 text-gray-300">
+                SMS Disclosure: By providing your phone number, you agree to receive text messages from Assistly AI. Message and data rates may apply. Message frequency varies. Reply STOP to opt-out.
+              </p>
               <p className="mt-4">
                 We use your mobile phone number to send you automated appointment reminders and important service-related notifications. You can opt-out of receiving text messages at any time by replying STOP to any message or by contacting us directly.
               </p>
@@ -118,7 +121,7 @@ export default function PrivacyPolicyPage() {
                 If you have any questions about this Privacy Policy, please contact us at:
               </p>
               <p className="mt-2">
-                Email: privacy@assistly.ai<br />
+                Email: clairesunyu@gmail.com<br />
                 Website: <Link href="/" className="text-blue-400 hover:text-blue-300">www.assistly.ai</Link>
               </p>
             </section>
@@ -142,7 +145,7 @@ export default function PrivacyPolicyPage() {
                 Terms of Service
               </Link>
               <p className="text-gray-400">
-                © 2024 Assistly AI. All rights reserved.
+                © 2026 Assistly AI. All rights reserved.
               </p>
             </div>
           </div>

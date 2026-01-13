@@ -132,7 +132,7 @@ export default function TermsOfServicePage() {
                 If you have any questions about these Terms of Service, please contact us at:
               </p>
               <p className="mt-2">
-                Email: support@assistly.ai<br />
+                Email: clairesunyu@gmail.com<br />
                 Website: <Link href="/" className="text-blue-400 hover:text-blue-300">www.assistly.ai</Link>
               </p>
             </section>
@@ -156,7 +156,7 @@ export default function TermsOfServicePage() {
                 Terms of Service
               </Link>
               <p className="text-gray-400">
-                © 2024 Assistly AI. All rights reserved.
+                © 2026 Assistly AI. All rights reserved.
               </p>
             </div>
           </div>
