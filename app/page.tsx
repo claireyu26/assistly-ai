@@ -32,6 +32,9 @@ export default function Home() {
             </BetaRestrictedButton>
             <a
               href="mailto:clairesunyu@gmail.com?subject=Demo Request - Assistly AI"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Email clairesunyu@gmail.com"
               className="border border-gray-700 hover:border-gray-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all inline-block"
             >
               Request a Demo
