@@ -125,7 +125,7 @@ export default function JoinPage() {
                                 }
                             }}
                             providers={["google"]}
-                            redirectTo={`${typeof window !== 'undefined' ? window.location.origin : ''}/dashboard/callback`}
+                            redirectTo={`${typeof window !== 'undefined' ? window.location.origin : ''}/auth/callback?next=/dashboard`}
                             onlyThirdPartyProviders={false}
                             view="sign_up"
                         />
