@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Phone, Globe, Clock, Zap, CheckCircle2 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { BetaRestrictedButton } from "@/components/BetaRestrictedButton";
+import { CopyEmailButton } from "@/components/CopyEmailButton";
 
 export default function Home() {
   return (
@@ -30,15 +31,9 @@ export default function Home() {
             >
               Start Free Trial
             </BetaRestrictedButton>
-            <a
-              href="mailto:clairesunyu@gmail.com?subject=Demo Request - Assistly AI"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="Email clairesunyu@gmail.com"
-              className="border border-gray-700 hover:border-gray-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all inline-block"
-            >
-              Request a Demo
-            </a>
+            <CopyEmailButton
+              className="border border-gray-700 hover:border-gray-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all inline-block hover:bg-gray-800/50"
+            />
           </div>
         </div>
 
