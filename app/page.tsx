@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Phone, Globe, Clock, Zap, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Phone, Globe, Clock, Zap, CheckCircle2 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
+import { BetaRestrictedButton } from "@/components/BetaRestrictedButton";
 
 export default function Home() {
   return (
@@ -23,13 +24,12 @@ export default function Home() {
             schedule appointments, and manage leads—all in your customer&apos;s language.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link
-              href="/dashboard"
+            <BetaRestrictedButton
               className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold flex items-center gap-2 transition-all hover:scale-105"
+              showIcon={true}
             >
               Start Free Trial
-              <ArrowRight className="h-5 w-5" />
-            </Link>
+            </BetaRestrictedButton>
             <a
               href="mailto:clairesunyu@gmail.com?subject=Demo Request - Assistly AI"
               className="border border-gray-700 hover:border-gray-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all inline-block"
@@ -103,13 +103,12 @@ export default function Home() {
             <p className="text-blue-100 mb-8 text-lg">
               Join micro-teams eliminating language barriers and admin overhead.
             </p>
-            <Link
-              href="/dashboard"
+            <BetaRestrictedButton
               className="bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold inline-flex items-center gap-2 hover:bg-gray-100 transition-all"
+              showIcon={true}
             >
               Get Started Free
-              <ArrowRight className="h-5 w-5" />
-            </Link>
+            </BetaRestrictedButton>
           </div>
         </div>
       </main>

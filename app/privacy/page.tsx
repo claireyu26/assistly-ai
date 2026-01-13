@@ -64,7 +64,7 @@ export default function PrivacyPolicyPage() {
                 No mobile information will be shared with third parties/affiliates for marketing/promotional purposes. All other categories exclude text messaging originator opt-in data and consent; this information will not be shared with any third parties.
               </p>
               <p className="mt-4 text-gray-300">
-                SMS Disclosure: By providing your phone number, you agree to receive text messages from Assistly AI. Message and data rates may apply. Message frequency varies. Reply STOP to opt-out.
+                SMS Policy: By providing your phone number, you agree to receive text messages from Assistly AI. Message and data rates may apply. Reply STOP to opt-out.
               </p>
               <p className="mt-4">
                 We use your mobile phone number to send you automated appointment reminders and important service-related notifications. You can opt-out of receiving text messages at any time by replying STOP to any message or by contacting us directly.
