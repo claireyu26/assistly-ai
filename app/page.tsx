@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Phone, Globe, Clock, Zap, CheckCircle2 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
@@ -5,6 +9,17 @@ import { BetaRestrictedButton } from "@/components/BetaRestrictedButton";
 import { CopyEmailButton } from "@/components/CopyEmailButton";
 
 export default function Home() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    // Safety net: If Supabase redirected here with a code, forward to callback
+    const code = searchParams.get("code");
+    if (code) {
+      router.replace(`/auth/callback?code=${code}&next=/dashboard`);
+    }
+  }, [searchParams, router]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       {/* Navigation */}
