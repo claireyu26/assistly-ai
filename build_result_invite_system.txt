@@ -1,0 +1,25 @@
+
+> assistly@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.35
+  - Environments: .env.local
+
+   Creating an optimized production build ...
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (131kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ✓ Compiled successfully
+   Skipping linting
+   Checking validity of types ...
+Failed to compile.
+
+./app/join/actions.ts:9:44
+Type error: Property 'rpc' does not exist on type 'Promise<SupabaseClient<Database, "public", { Tables: { businesses: { Row: { id: string; name: string; owner_id: string; language_preference: string; business_hours: Json; created_at: string; updated_at: string; }; Insert: { ...; }; Update: { ...; }; }; ... 5 more ...; notification_log: { ...; }; }; Views: {}; Functi...'.
+
+[0m [90m  7 |[39m[0m
+[0m [90m  8 |[39m     [90m// Call the RPC function defined in the migration[39m[0m
+[0m[31m[1m>[22m[39m[90m  9 |[39m     [36mconst[39m { data[33m,[39m error } [33m=[39m [36mawait[39m supabase[33m.[39mrpc([32m"verify_invite_code"[39m[33m,[39m {[0m
+[0m [90m    |[39m                                            [31m[1m^[22m[39m[0m
+[0m [90m 10 |[39m         input_code[33m:[39m code[33m,[39m[0m
+[0m [90m 11 |[39m     })[33m;[39m[0m
+[0m [90m 12 |[39m[0m
+Next.js build worker exited with code: 1 and signal: null

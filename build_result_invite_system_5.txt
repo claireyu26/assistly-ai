@@ -1,0 +1,47 @@
+
+> assistly@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.35
+  - Environments: .env.local
+
+   Creating an optimized production build ...
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (131kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ✓ Compiled successfully
+   Skipping linting
+   Checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/12) ...
+   Generating static pages (3/12) 
+   Generating static pages (6/12) 
+   Generating static pages (9/12) 
+ ✓ Generating static pages (12/12)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    2.04 kB        98.3 kB
+├ ○ /_not-found                          876 B          88.4 kB
+├ ƒ /api/auth/google-calendar/callback   0 B                0 B
+├ ƒ /api/auth/google-calendar/connect    0 B                0 B
+├ ƒ /api/vapi-webhook                    0 B                0 B
+├ ƒ /auth/signout                        0 B                0 B
+├ ƒ /dashboard                           139 B          87.7 kB
+├ ƒ /dashboard/ai-agent                  3.32 kB         142 kB
+├ ƒ /dashboard/marketing                 109 kB          248 kB
+├ ƒ /dashboard/settings                  2.32 kB         141 kB
+├ ○ /join                                22.9 kB         162 kB
+├ ○ /login                               182 B          96.4 kB
+├ ○ /privacy                             182 B          96.4 kB
+└ ○ /terms                               182 B          96.4 kB
++ First Load JS shared by all            87.5 kB
+  ├ chunks/117-8b69961283912ea2.js       31.9 kB
+  ├ chunks/fd9d1056-975947b1bc3e1e56.js  53.6 kB
+  └ other shared chunks (total)          2 kB
+
+
+ƒ Middleware                             70.3 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
