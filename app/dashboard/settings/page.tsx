@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from "@/lib/supabase";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import CalendarSettings from "@/components/CalendarSettings";
 import { CheckCircle2, XCircle } from "lucide-react";
@@ -18,15 +18,15 @@ export default async function SettingsPage({
   }
 
   // Fetch all businesses for the owner
-  const { data: businesses } = await supabase
-    .from("businesses")
+  const { data: businesses } = await (supabase
+    .from("businesses") as any)
     .select("*")
     .eq("owner_id", user.id);
 
   const businessIdParam = searchParams?.businessId;
   const business =
     (typeof businessIdParam === "string" &&
-      businesses?.find((b) => b.id === businessIdParam)) ||
+      businesses?.find((b: any) => b.id === businessIdParam)) ||
     businesses?.[0];
 
   if (!business) {

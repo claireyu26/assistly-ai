@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Calendar, CheckCircle2, XCircle, Loader2 } from "lucide-react";
-import { createClient } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 
 interface CalendarSettingsProps {
   businessId: string;

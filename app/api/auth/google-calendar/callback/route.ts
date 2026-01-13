@@ -1,6 +1,9 @@
-import { createServerSupabaseClient } from "@/lib/supabase";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { Database } from "@/types/database.types";
 import { NextResponse } from "next/server";
 import { redirect } from "next/navigation";
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
   try {
@@ -67,15 +70,15 @@ export async function GET(request: Request) {
     expiresAt.setSeconds(expiresAt.getSeconds() + (expires_in || 3600));
 
     // Store tokens in database
-    const { error: upsertError } = await supabase
-      .from("google_calendar_tokens")
+    const { error: upsertError } = await (supabase
+      .from("google_calendar_tokens") as any)
       .upsert(
         {
           business_id,
           access_token,
           refresh_token,
           expires_at: expiresAt.toISOString(),
-        },
+        } as Database["public"]["Tables"]["google_calendar_tokens"]["Insert"],
         {
           onConflict: "business_id",
         }

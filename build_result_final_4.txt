@@ -1,0 +1,28 @@
+
+> assistly@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.35
+  - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+
+./components/CalendarSettings.tsx
+19:6  Warning: React Hook useEffect has a missing dependency: 'checkConnectionStatus'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
+Failed to compile.
+
+./app/api/vapi-webhook/route.ts:82:31
+Type error: Property 'businessId' does not exist on type '{ business_id?: string | undefined; }'. Did you mean 'business_id'?
+
+[0m [90m 80 |[39m     [36mconst[39m businessId [33m=[39m[0m
+[0m [90m 81 |[39m       payload[33m.[39mcall[33m?[39m[33m.[39mmetadata[33m?[39m[33m.[39mbusiness_id [33m||[39m[0m
+[0m[31m[1m>[22m[39m[90m 82 |[39m       payload[33m.[39mcall[33m?[39m[33m.[39mmetadata[33m?[39m[33m.[39mbusinessId [33m||[39m[0m
+[0m [90m    |[39m                               [31m[1m^[22m[39m[0m
+[0m [90m 83 |[39m       parameters[33m?[39m[33m.[39mbusiness_id[33m;[39m[0m
+[0m [90m 84 |[39m[0m
+[0m [90m 85 |[39m     [36mif[39m ([33m![39mbusinessId) {[0m
+Next.js build worker exited with code: 1 and signal: null

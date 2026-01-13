@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Bot, Save, Loader2 } from "lucide-react";
-import { createClient } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function AIAgentPage() {
@@ -150,7 +150,7 @@ When scheduling appointments, check availability and confirm the time with the c
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white mb-2">AI Agent Configuration</h1>
         <p className="text-gray-400">
-          Configure your AI assistant's knowledge base to help it answer customer questions.
+          Configure your AI assistant&apos;s knowledge base to help it answer customer questions.
         </p>
       </div>
 
@@ -244,7 +244,7 @@ When scheduling appointments, check availability and confirm the time with the c
         <h3 className="text-lg font-semibold text-white mb-2">How It Works</h3>
         <ul className="space-y-2 text-gray-300 text-sm">
           <li>• Your AI assistant uses this information to answer customer questions about your business</li>
-          <li>• The AI automatically detects the caller's language and responds in that language</li>
+          <li>• The AI automatically detects the caller&apos;s language and responds in that language</li>
           <li>• When customers request appointments, the AI checks your Google Calendar for availability</li>
           <li>• Appointments are automatically synced to your Google Calendar</li>
         </ul>

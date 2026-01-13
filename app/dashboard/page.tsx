@@ -1,5 +1,5 @@
 import { Phone, Users, Calendar, TrendingUp } from "lucide-react";
-import { createServerSupabaseClient } from "@/lib/supabase";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export default async function DashboardPage({
   searchParams,
@@ -14,14 +14,14 @@ export default async function DashboardPage({
   const businessIdParam = searchParams?.businessId;
 
   // Fetch all businesses for the owner
-  const { data: businesses } = await supabase
-    .from("businesses")
+  const { data: businesses } = await (supabase
+    .from("businesses") as any)
     .select("*")
     .eq("owner_id", user?.id);
 
   let business =
     (typeof businessIdParam === "string" &&
-      businesses?.find((b) => b.id === businessIdParam)) ||
+      businesses?.find((b: any) => b.id === businessIdParam)) ||
     businesses?.[0];
 
   // Fetch stats
@@ -73,7 +73,7 @@ export default async function DashboardPage({
           Welcome back{user?.email ? `, ${user.email.split("@")[0]}` : ""}!
         </h1>
         <p className="text-gray-400">
-          Here's what's happening with your business today.
+          Here&apos;s what&apos;s happening with your business today.
         </p>
       </div>
 
@@ -120,7 +120,7 @@ export default async function DashboardPage({
           <div className="space-y-4">
             {business ? (
               <p className="text-gray-400">
-                Your business "{business.name}" is set up and ready to go!
+                Your business &quot;{business.name}&quot; is set up and ready to go!
               </p>
             ) : (
               <div>

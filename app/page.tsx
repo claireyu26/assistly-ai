@@ -42,7 +42,7 @@ export default function Home() {
           </h1>
           <p className="text-xl text-gray-400 mb-8 max-w-3xl mx-auto">
             Eliminate language barriers and admin overhead. Let AI handle your calls,
-            schedule appointments, and manage leads—all in your customer's language.
+            schedule appointments, and manage leads—all in your customer&apos;s language.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
@@ -66,7 +66,7 @@ export default function Home() {
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">Multi-Language Support</h3>
             <p className="text-gray-400">
-              Your AI assistant speaks your customer's language, breaking down communication barriers instantly.
+              Your AI assistant speaks your customer&apos;s language, breaking down communication barriers instantly.
             </p>
           </div>
 

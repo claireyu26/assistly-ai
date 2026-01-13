@@ -1,0 +1,32 @@
+
+> assistly@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.35
+  - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+
+./components/CalendarSettings.tsx
+19:6  Warning: React Hook useEffect has a missing dependency: 'checkConnectionStatus'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
+Failed to compile.
+
+./app/api/auth/google-calendar/callback/route.ts:72:8
+Type error: No overload matches this call.
+  Overload 1 of 2, '(values: never, options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; } | undefined): PostgrestFilterBuilder<{ ...; }, ... 5 more ..., "POST">', gave the following error.
+    Argument of type '{ business_id: any; access_token: any; refresh_token: any; expires_at: string; }' is not assignable to parameter of type 'never'.
+  Overload 2 of 2, '(values: never[], options?: { onConflict?: string | undefined; ignoreDuplicates?: boolean | undefined; count?: "exact" | "planned" | "estimated" | undefined; defaultToNull?: boolean | undefined; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Object literal may only specify known properties, and 'business_id' does not exist in type 'never[]'.
+
+[0m [90m 70 |[39m     [36mconst[39m { error[33m:[39m upsertError } [33m=[39m [36mawait[39m supabase[0m
+[0m [90m 71 |[39m       [33m.[39m[36mfrom[39m([32m"google_calendar_tokens"[39m)[0m
+[0m[31m[1m>[22m[39m[90m 72 |[39m       [33m.[39mupsert([0m
+[0m [90m    |[39m        [31m[1m^[22m[39m[0m
+[0m [90m 73 |[39m         {[0m
+[0m [90m 74 |[39m           business_id[33m,[39m[0m
+[0m [90m 75 |[39m           access_token[33m,[39m[0m
+Next.js build worker exited with code: 1 and signal: null

@@ -1,6 +1,7 @@
-import { createServerSupabaseClient } from "@/lib/supabase";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic';
 export async function POST(request: Request) {
   try {
     const supabase = await createServerSupabaseClient();
@@ -34,7 +35,7 @@ export async function POST(request: Request) {
     // Construct Google OAuth URL
     const redirectUri = `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/api/auth/google-calendar/callback`;
     const clientId = process.env.GOOGLE_CLIENT_ID;
-    
+
     if (!clientId) {
       return NextResponse.json(
         { error: "Google OAuth not configured" },

@@ -11,7 +11,7 @@ import {
   Bot,
   BarChart3,
 } from "lucide-react";
-import { createServerSupabaseClient } from "@/lib/supabase";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import BusinessSwitcher from "@/components/BusinessSwitcher";
 

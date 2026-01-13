@@ -1,6 +1,7 @@
-import { createServerSupabaseClient } from "@/lib/supabase";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic';
 interface VapiWebhookPayload {
   message?: {
     type?: string;
@@ -19,10 +20,16 @@ interface VapiWebhookPayload {
     };
     metadata?: {
       business_id?: string;
+      businessId?: string;
     };
   };
   transcript?: string;
   endTime?: string;
+  functionCall?: {
+    name?: string;
+    parameters?: any;
+  };
+  status?: string;
 }
 
 export async function POST(request: Request) {
@@ -34,8 +41,8 @@ export async function POST(request: Request) {
 
     // Handle function call events (when AI extracts data)
     // Vapi.ai can send function calls in different formats
-    const functionCall = 
-      payload.message?.function_call || 
+    const functionCall =
+      payload.message?.function_call ||
       payload.functionCall ||
       (payload.message?.type === "function-call" ? payload.message.function_call : null);
 
@@ -45,7 +52,7 @@ export async function POST(request: Request) {
 
     // Handle call end event
     if (
-      payload.call?.status === "ended" || 
+      payload.call?.status === "ended" ||
       payload.call?.endedReason ||
       payload.status === "ended"
     ) {
@@ -70,9 +77,9 @@ async function handleExtractAppointmentInfo(
 ) {
   try {
     const { customer_name, customer_phone, desired_appointment_time, language } = parameters || {};
-    
+
     // Try to get business_id from various possible locations
-    const businessId = 
+    const businessId =
       payload.call?.metadata?.business_id ||
       payload.call?.metadata?.businessId ||
       parameters?.business_id;

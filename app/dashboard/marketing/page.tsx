@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { createClient } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 import type { Database } from "@/types/database.types";
 import MarketingAnalyticsCharts, {
   CallVolumePoint,
@@ -53,7 +53,7 @@ export default function MarketingPage() {
 
         let active =
           (businessIdFromUrl &&
-            list.find((b) => b.id === businessIdFromUrl)) ||
+            list.find((b: any) => b.id === businessIdFromUrl)) ||
           list[0];
 
         setBusiness(active);

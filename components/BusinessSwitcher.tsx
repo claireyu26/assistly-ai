@@ -1,11 +1,11 @@
-\"use client\";
+"use client";
 
-import { useEffect, useState } from \"react\";
-import { usePathname, useRouter, useSearchParams } from \"next/navigation\";
-import { createClient } from \"@/lib/supabase\";
-import type { Database } from \"@/types/database.types\";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+import type { Database } from "@/types/database.types";
 
-type Business = Database[\"public\"][\"Tables\"][\"businesses\"][\"Row\"];
+type Business = Database["public"]["Tables"]["businesses"]["Row"];
 
 export default function BusinessSwitcher() {
   const [businesses, setBusinesses] = useState<Business[]>([]);
@@ -29,18 +29,18 @@ export default function BusinessSwitcher() {
         }
 
         const { data } = await supabase
-          .from(\"businesses\")
-          .select(\"*\")
-          .eq(\"owner_id\", user.id)
-          .order(\"created_at\", { ascending: true });
+          .from("businesses")
+          .select("*")
+          .eq("owner_id", user.id)
+          .order("created_at", { ascending: true });
 
         const list = data || [];
         setBusinesses(list);
 
-        const fromUrl = searchParams.get(\"businessId\") || undefined;
+        const fromUrl = searchParams.get("businessId") || undefined;
         const fromStorage =
-          typeof window !== \"undefined\"
-            ? window.localStorage.getItem(\"assistly:businessId\") || undefined
+          typeof window !== "undefined"
+            ? window.localStorage.getItem("assistly:businessId") || undefined
             : undefined;
 
         const initial =
@@ -62,12 +62,12 @@ export default function BusinessSwitcher() {
 
   const handleChange = (id: string) => {
     setSelectedId(id);
-    if (typeof window !== \"undefined\") {
-      window.localStorage.setItem(\"assistly:businessId\", id);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("assistly:businessId", id);
     }
 
     const params = new URLSearchParams(searchParams.toString());
-    params.set(\"businessId\", id);
+    params.set("businessId", id);
 
     router.push(`${pathname}?${params.toString()}`);
   };
@@ -77,14 +77,14 @@ export default function BusinessSwitcher() {
   }
 
   return (
-    <div className=\"mt-4\">
-      <label className=\"block text-xs font-medium text-gray-400 mb-1\">
+    <div className="mt-4">
+      <label className="block text-xs font-medium text-gray-400 mb-1">
         Location
       </label>
       <select
         value={selectedId}
         onChange={(e) => handleChange(e.target.value)}
-        className=\"w-full bg-gray-900 border border-gray-700 text-sm text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500\"
+        className="w-full bg-gray-900 border border-gray-700 text-sm text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         {businesses.map((b) => (
           <option key={b.id} value={b.id}>
