@@ -18,7 +18,8 @@ export async function GET(request: Request) {
                     getAll() {
                         return cookieStore.getAll();
                     },
-                    setAll(cookiesToSet) {
+                    // Explicitly type the parameter to satisfy the TypeScript build
+                    setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
                         try {
                             cookiesToSet.forEach(({ name, value, options }) =>
                                 cookieStore.set(name, value, options)
