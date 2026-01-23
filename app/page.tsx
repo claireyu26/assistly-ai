@@ -133,12 +133,13 @@ export default function Home() {
               <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
                 {/* SMS Image */}
                 <div className="flex-shrink-0 w-full md:w-1/2">
-                  <div className="relative w-full aspect-[9/16] max-w-sm mx-auto">
+                  <div className="relative w-full aspect-[9/16] max-w-sm mx-auto bg-gray-100 rounded-lg overflow-hidden">
                     <Image
                       src="/sms-preview.png"
                       alt="SMS notification preview showing automated appointment reminders from Assistly AI"
-                      fill
-                      className="object-contain rounded-lg"
+                      width={400}
+                      height={711}
+                      className="object-contain rounded-lg w-full h-full"
                       priority
                     />
                   </div>
