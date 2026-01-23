@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -9,7 +9,7 @@ import { Navbar } from "@/components/Navbar";
 import { BetaRestrictedButton } from "@/components/BetaRestrictedButton";
 import { CopyEmailButton } from "@/components/CopyEmailButton";
 
-export default function Home() {
+function HomeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -133,13 +133,13 @@ export default function Home() {
               <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
                 {/* SMS Image */}
                 <div className="flex-shrink-0 w-full md:w-1/2">
-                  <div className="relative w-full aspect-[9/16] max-w-sm mx-auto bg-gray-100 rounded-lg overflow-hidden">
+                  <div className="w-full max-w-sm mx-auto bg-gray-100 rounded-lg overflow-hidden">
                     <Image
                       src="/sms-preview.png"
                       alt="SMS notification preview showing automated appointment reminders from Assistly AI"
                       width={400}
                       height={711}
-                      className="object-contain rounded-lg w-full h-full"
+                      className="object-contain rounded-lg w-full h-auto"
                       priority
                     />
                   </div>
@@ -197,5 +197,17 @@ export default function Home() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    }>
+      <HomeContent />
+    </Suspense>
   );
 }
