@@ -3,7 +3,8 @@
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Phone, Globe, Clock, Zap, CheckCircle2 } from "lucide-react";
+import Image from "next/image";
+import { Phone, Globe, Clock, Zap, CheckCircle2, MessageSquare } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { BetaRestrictedButton } from "@/components/BetaRestrictedButton";
 import { CopyEmailButton } from "@/components/CopyEmailButton";
@@ -124,21 +125,67 @@ export default function Home() {
             </BetaRestrictedButton>
           </div>
         </div>
+
+        {/* Product Preview Section - SMS Notifications */}
+        <div className="mt-32 mb-20">
+          <div className="bg-white rounded-2xl p-8 md:p-12 shadow-2xl">
+            <div className="max-w-6xl mx-auto">
+              <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+                {/* SMS Image */}
+                <div className="flex-shrink-0 w-full md:w-1/2">
+                  <div className="relative w-full aspect-[9/16] max-w-sm mx-auto">
+                    <Image
+                      src="/sms-preview.png"
+                      alt="SMS notification preview showing automated appointment reminders from Assistly AI"
+                      fill
+                      className="object-contain rounded-lg"
+                      priority
+                    />
+                  </div>
+                </div>
+
+                {/* SMS Disclosure Text */}
+                <div className="flex-1 text-center md:text-left">
+                  <div className="flex items-center justify-center md:justify-start gap-3 mb-6">
+                    <MessageSquare className="h-8 w-8 text-blue-600" />
+                    <h2 className="text-3xl font-bold text-gray-900">
+                      Automated Appointment Reminders
+                    </h2>
+                  </div>
+                  <p className="text-lg text-gray-700 mb-6">
+                    Stay on top of your schedule with intelligent SMS notifications sent directly to your customers.
+                  </p>
+                  <div className="bg-gray-50 border-l-4 border-blue-600 p-4 rounded-r-lg">
+                    <p className="text-sm text-gray-800 font-medium leading-relaxed">
+                      By providing your number, you agree to receive automated service notifications from Assistly AI. Msg &amp; data rates may apply. Reply STOP to opt-out.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-gray-800 mt-20">
+      <footer className="border-t border-gray-800 mt-20 bg-gray-900/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-2 mb-4 md:mb-0">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center space-x-2">
               <Phone className="h-5 w-5 text-blue-400" />
               <span className="text-white font-semibold">Assistly AI</span>
             </div>
-            <div className="flex items-center space-x-6 text-sm">
-              <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">
+            <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
+              <Link 
+                href="/privacy" 
+                className="text-white hover:text-blue-400 transition-colors font-medium underline underline-offset-4 decoration-2 decoration-blue-400/50 hover:decoration-blue-400"
+              >
                 Privacy Policy
               </Link>
-              <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">
+              <Link 
+                href="/terms" 
+                className="text-white hover:text-blue-400 transition-colors font-medium underline underline-offset-4 decoration-2 decoration-blue-400/50 hover:decoration-blue-400"
+              >
                 Terms of Service
               </Link>
               <p className="text-gray-400">

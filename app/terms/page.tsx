@@ -66,6 +66,9 @@ export default function TermsOfServicePage() {
               <p className="mt-4">
                 Users can opt-out of receiving text message reminders at any time by replying STOP to any message or by adjusting their notification preferences in their account settings. Email reminders can be disabled through account settings.
               </p>
+              <p className="mt-4 bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 font-semibold text-white">
+                No mobile information will be shared with third parties/affiliates for marketing/promotional purposes. All other categories exclude text messaging originator opt-in data and consent; this information will not be shared with any third parties.
+              </p>
             </section>
 
             <section>
