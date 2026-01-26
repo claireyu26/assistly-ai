@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  let supabaseResponse = NextResponse.next({
+  let response = NextResponse.next({
     request,
   })
 
@@ -21,14 +21,8 @@ export async function middleware(request: NextRequest) {
             return request.cookies.getAll()
           },
           setAll(cookiesToSet: { name: string; value: string; options?: any }[]) {
-            cookiesToSet.forEach(({ name, value }) => {
-              request.cookies.set(name, value)
-            })
-            supabaseResponse = NextResponse.next({
-              request,
-            })
             cookiesToSet.forEach(({ name, value, options }) => {
-              supabaseResponse.cookies.set(name, value, options)
+              response.cookies.set(name, value, options)
             })
           },
         },
@@ -38,26 +32,23 @@ export async function middleware(request: NextRequest) {
     // Refresh session if expired - required for Server Components
     // Don't throw if this fails, just continue
     await supabase.auth.getUser().catch(() => {
-      // Ignore auth errors in middleware
+      // Ignore auth errors in middleware - user might not be logged in
     })
   } catch (error) {
-    // If middleware fails, just continue with the request
-    console.error('Middleware error:', error)
+    // If any error occurs, return the response anyway
+    // This ensures the middleware never fails completely
+    return response
   }
 
-  return supabaseResponse
+  return response
 }
 
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - api routes (they handle their own auth)
-     * - public static files
+     * Match only dashboard routes that need auth
+     * Skip root path, public pages, API routes, and static files
      */
-    '/((?!_next/static|_next/image|favicon.ico|api|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)',
+    '/dashboard/:path*',
   ],
 }
