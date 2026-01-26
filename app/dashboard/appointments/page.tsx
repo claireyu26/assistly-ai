@@ -63,7 +63,8 @@ export default async function AppointmentsPage({
       .select("*")
       .in("id", leadIds);
     
-    leadsMap = new Map((leads || []).map((lead) => [lead.id, lead]));
+    const leadsList: Lead[] = leads || [];
+    leadsMap = new Map(leadsList.map((lead) => [lead.id, lead]));
   }
 
   // Combine appointments with their leads
