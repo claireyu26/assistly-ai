@@ -158,7 +158,7 @@ function HomeContent() {
                   </p>
                   <div className="bg-gray-50 border-l-4 border-blue-600 p-4 rounded-r-lg">
                     <p className="text-sm text-gray-800 font-medium leading-relaxed">
-                      By providing your number, you agree to receive automated service notifications from Assistly AI. Msg &amp; data rates may apply. Reply STOP to opt-out.
+                      By providing your number, you agree to receive automated service notifications from Assistly AI. Msg &amp; data rates may apply. Reply STOP to opt-out. View our <Link href="/privacy" className="underline hover:text-blue-600">Privacy Policy</Link>.
                     </p>
                   </div>
                 </div>
@@ -177,14 +177,14 @@ function HomeContent() {
               <span className="text-white font-semibold">Assistly AI</span>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
-              <Link 
-                href="/privacy" 
+              <Link
+                href="/privacy"
                 className="text-white hover:text-blue-400 transition-colors font-medium underline underline-offset-4 decoration-2 decoration-blue-400/50 hover:decoration-blue-400"
               >
                 Privacy Policy
               </Link>
-              <Link 
-                href="/terms" 
+              <Link
+                href="/terms"
                 className="text-white hover:text-blue-400 transition-colors font-medium underline underline-offset-4 decoration-2 decoration-blue-400/50 hover:decoration-blue-400"
               >
                 Terms of Service
