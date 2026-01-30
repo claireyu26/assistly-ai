@@ -1,49 +1,25 @@
 "use client";
 
-import { MessageSquare, Mail } from "lucide-react";
+import { MessageSquare, Calendar } from "lucide-react";
 
 export function NotificationCard() {
     return (
-        <div className="flex flex-col gap-4 w-full max-w-sm">
-            {/* iOS Dynamic Island / Lock Screen Container */}
-
-            {/* SMS Notification */}
-            <div className="relative group/item overflow-hidden rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl transition-all duration-300 hover:bg-white/15">
-                <div className="p-3">
+        <div className="w-full max-w-[320px] font-sans">
+            {/* iOS Notification */}
+            <div className="relative overflow-hidden rounded-[20px] bg-white/40 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_0_rgba(31,38,135,0.37)] transition-all duration-300 hover:bg-white/50 z-20">
+                <div className="p-4">
                     <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
-                            <div className="w-5 h-5 rounded bg-green-500 flex items-center justify-center shadow-lg">
-                                <MessageSquare className="w-3 h-3 text-white fill-current" />
+                            <div className="w-5 h-5 rounded bg-white flex items-center justify-center shadow-sm">
+                                <Calendar className="w-3 h-3 text-gray-900" />
                             </div>
-                            <span className="text-[10px] font-semibold text-gray-200 uppercase tracking-wide">MESSAGES</span>
-                        </div>
-                        <span className="text-[10px] text-gray-400">now</span>
-                    </div>
-                    <div className="pl-0.5">
-                        <div className="text-sm font-semibold text-white mb-0.5">Assistly AI</div>
-                        <div className="text-xs text-gray-300 leading-snug">
-                            Your appointment with <span className="text-white font-medium">Acme Corp</span> is confirmed for 2 PM. Reply STOP to opt out.
+                            <span className="text-[10px] font-bold text-gray-800 uppercase tracking-wide opacity-80">CALENDAR • NOW</span>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            {/* Gmail Notification */}
-            <div className="relative group/item overflow-hidden rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl transition-all duration-300 hover:bg-white/15 delay-75">
-                <div className="p-3">
-                    <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                            <div className="w-5 h-5 rounded bg-white flex items-center justify-center shadow-lg">
-                                <Mail className="w-3 h-3 text-red-500" />
-                            </div>
-                            <span className="text-[10px] font-semibold text-gray-200 uppercase tracking-wide">GMAIL</span>
-                        </div>
-                        <span className="text-[10px] text-gray-400">2m ago</span>
-                    </div>
-                    <div className="pl-0.5">
-                        <div className="text-sm font-semibold text-white mb-0.5">New Lead: High Intent</div>
-                        <div className="text-xs text-gray-300 leading-snug">
-                            John Doe requested a demo. Language: <span className="text-blue-300">Spanish (ES)</span>.
+                    <div className="block">
+                        <div className="text-[15px] font-semibold text-gray-900 mb-0.5">New Lead Scheduled</div>
+                        <div className="text-[13px] text-gray-800 leading-snug">
+                            John Smith for <span className="font-semibold">Friday @ 10:00 AM</span>. Location: 123 Maple St.
                         </div>
                     </div>
                 </div>
