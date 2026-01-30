@@ -3,11 +3,15 @@
 import { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
+
 import { Phone, Globe, Clock, Zap, CheckCircle2, MessageSquare } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { BetaRestrictedButton } from "@/components/BetaRestrictedButton";
 import { CopyEmailButton } from "@/components/CopyEmailButton";
+import { VoiceWaveform } from "@/components/ui-assets/VoiceWaveform";
+import { CalendarCard } from "@/components/ui-assets/CalendarCard";
+import { NotificationCard } from "@/components/ui-assets/NotificationCard";
+import { DashboardSparkline } from "@/components/ui-assets/DashboardSparkline";
 
 function HomeContent() {
   const router = useRouter();
@@ -143,19 +147,10 @@ function HomeContent() {
                   </div>
                 </div>
                 <div className="w-full md:w-1/2 order-1 md:order-2">
-                  <div className="bg-gray-900/50 backdrop-blur-md border border-gray-800 p-8 rounded-2xl hover:border-blue-500/50 transition-all duration-500 shadow-2xl relative overflow-hidden group-hover:shadow-blue-900/20">
+                  <div className="bg-gray-900/50 backdrop-blur-md border border-gray-800 p-8 rounded-2xl hover:border-blue-500/50 transition-all duration-500 shadow-2xl relative overflow-hidden group-hover:shadow-blue-900/20 group-hover:-translate-y-1">
                     <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div className="flex items-center justify-center h-48 bg-gray-800/50 rounded-xl relative">
-                      {/* Visual Mockup for Voice */}
-                      <div className="relative">
-                        <div className="absolute -inset-4 bg-blue-500/20 rounded-full blur-xl animate-pulse"></div>
-                        <Phone className="h-16 w-16 text-blue-400 relative z-10" />
-                      </div>
-                      <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-1">
-                        {[1, 2, 3, 4, 5].map(i => (
-                          <div key={i} className="w-1 bg-blue-500/50 rounded-full animate-[music-bar_1s_ease-in-out_infinite]" style={{ height: Math.random() * 24 + 8 + 'px', animationDelay: i * 0.1 + 's' }}></div>
-                        ))}
-                      </div>
+                    <div className="rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/10">
+                      <VoiceWaveform />
                     </div>
                   </div>
                 </div>
@@ -167,25 +162,10 @@ function HomeContent() {
                   <div className="w-2 h-2 rounded-full bg-purple-500"></div>
                 </div>
                 <div className="w-full md:w-1/2 order-1 md:order-1">
-                  <div className="bg-gray-900/50 backdrop-blur-md border border-gray-800 p-8 rounded-2xl hover:border-purple-500/50 transition-all duration-500 shadow-2xl relative overflow-hidden group-hover:shadow-purple-900/20">
+                  <div className="bg-gray-900/50 backdrop-blur-md border border-gray-800 p-8 rounded-2xl hover:border-purple-500/50 transition-all duration-500 shadow-2xl relative overflow-hidden group-hover:shadow-purple-900/20 group-hover:-translate-y-1">
                     <div className="absolute inset-0 bg-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div className="flex flex-col p-4 bg-gray-800/50 rounded-xl h-48 justify-center border border-gray-700/50">
-                      {/* Calendar Mockup */}
-                      <div className="flex items-center gap-3 mb-3 border-b border-gray-700 pb-3">
-                        <div className="w-8 h-8 bg-black rounded flex items-center justify-center text-xs font-bold text-white">28</div>
-                        <div className="text-left">
-                          <div className="h-2 w-24 bg-gray-600 rounded mb-1"></div>
-                          <div className="h-2 w-16 bg-gray-700 rounded"></div>
-                        </div>
-                      </div>
-                      <div className="bg-blue-600/20 border-l-2 border-blue-500 p-2 rounded mb-2">
-                        <div className="text-xs text-blue-200 font-semibold">Discovery Call - John Doe</div>
-                        <div className="text-[10px] text-blue-300">10:00 AM - 10:30 AM</div>
-                      </div>
-                      <div className="flex items-center gap-2 mt-auto">
-                        <CheckCircle2 className="h-4 w-4 text-green-400" />
-                        <span className="text-xs text-green-400">Synced to Google Calendar</span>
-                      </div>
+                    <div className="flex justify-center items-center">
+                      <CalendarCard />
                     </div>
                   </div>
                 </div>
@@ -221,27 +201,24 @@ function HomeContent() {
                     <Globe className="h-3 w-3 text-pink-400" />
                     <span className="text-xs text-gray-300 font-mono">Multi-Lingual Engine</span>
                   </div>
+                  <div className="mt-8 pt-6 border-t border-gray-800">
+                    <h4 className="text-sm font-semibold text-white mb-2 flex items-center gap-2">
+                      <MessageSquare className="h-4 w-4 text-pink-400" />
+                      Automated Appointment Reminders
+                    </h4>
+                    <p className="text-xs text-gray-500 leading-relaxed mb-3">
+                      By providing your number, you agree to receive automated service notifications from Assistly AI. Msg &amp; data rates may apply. Reply STOP to opt-out.
+                    </p>
+                    <Link href="/privacy" className="text-xs text-blue-400 hover:text-blue-300 transition-colors">
+                      View Privacy Policy →
+                    </Link>
+                  </div>
                 </div>
                 <div className="w-full md:w-1/2 order-1 md:order-2">
-                  <div className="bg-gray-900/50 backdrop-blur-md border border-gray-800 p-8 rounded-2xl hover:border-pink-500/50 transition-all duration-500 shadow-2xl relative overflow-hidden group-hover:shadow-pink-900/20">
+                  <div className="bg-gray-900/50 backdrop-blur-md border border-gray-800 p-8 rounded-2xl hover:border-pink-500/50 transition-all duration-500 shadow-2xl relative overflow-hidden group-hover:shadow-pink-900/20 group-hover:-translate-y-1">
                     <div className="absolute inset-0 bg-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div className="space-y-3">
-                      {/* SMS Mockup */}
-                      <div className="bg-gray-800 rounded-lg p-3 max-w-[80%] border border-gray-700">
-                        <div className="flex items-center gap-2 mb-1">
-                          <MessageSquare className="h-3 w-3 text-blue-400" />
-                          <span className="text-[10px] text-gray-400">SMS • Now</span>
-                        </div>
-                        <div className="text-xs text-gray-200">New appointment confirmed with John.<br />Tue, Oct 24 @ 10:00 AM</div>
-                      </div>
-                      {/* Email Mockup */}
-                      <div className="bg-gray-800 rounded-lg p-3 max-w-[80%] ml-auto border border-gray-700">
-                        <div className="flex items-center gap-2 mb-1 justify-end">
-                          <span className="text-[10px] text-gray-400">Email • Now</span>
-                          <div className="h-2 w-2 bg-green-500 rounded-full"></div>
-                        </div>
-                        <div className="text-xs text-gray-200">Lead Summary: High Intent<br />Language: Spanish (ES)</div>
-                      </div>
+                    <div className="flex justify-center items-center">
+                      <NotificationCard />
                     </div>
                   </div>
                 </div>
@@ -253,32 +230,10 @@ function HomeContent() {
                   <div className="w-2 h-2 rounded-full bg-green-500"></div>
                 </div>
                 <div className="w-full md:w-1/2 order-1 md:order-1">
-                  <div className="bg-gray-900/50 backdrop-blur-md border border-gray-800 p-8 rounded-2xl hover:border-green-500/50 transition-all duration-500 shadow-2xl relative overflow-hidden group-hover:shadow-green-900/20">
+                  <div className="bg-gray-900/50 backdrop-blur-md border border-gray-800 p-8 rounded-2xl hover:border-green-500/50 transition-all duration-500 shadow-2xl relative overflow-hidden group-hover:shadow-green-900/20 group-hover:-translate-y-1">
                     <div className="absolute inset-0 bg-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    {/* Dashboard Mockup */}
-                    <div className="bg-gray-900 rounded-xl border border-gray-700 overflow-hidden">
-                      <div className="flex items-center gap-2 px-3 py-2 border-b border-gray-800 bg-gray-800/50">
-                        <div className="h-2 w-2 rounded-full bg-red-400"></div>
-                        <div className="h-2 w-2 rounded-full bg-yellow-400"></div>
-                        <div className="h-2 w-2 rounded-full bg-green-400"></div>
-                      </div>
-                      <div className="p-4 grid grid-cols-2 gap-3">
-                        <div className="bg-gray-800 rounded p-2">
-                          <div className="text-[10px] text-gray-400">Total Calls</div>
-                          <div className="text-lg font-bold text-white">1,284</div>
-                          <div className="text-[10px] text-green-400">↑ 12%</div>
-                        </div>
-                        <div className="bg-gray-800 rounded p-2">
-                          <div className="text-[10px] text-gray-400">Conversion</div>
-                          <div className="text-lg font-bold text-white">24%</div>
-                          <div className="text-[10px] text-green-400">↑ 5%</div>
-                        </div>
-                        <div className="col-span-2 bg-gray-800 rounded p-2 h-16 flex items-end gap-1 px-1">
-                          {[40, 60, 45, 70, 50, 60, 75, 50, 65, 80].map((h, i) => (
-                            <div key={i} className="flex-1 bg-blue-500/50 rounded-t" style={{ height: h + '%' }}></div>
-                          ))}
-                        </div>
-                      </div>
+                    <div className="flex justify-center items-center">
+                      <DashboardSparkline />
                     </div>
                   </div>
                 </div>
@@ -319,46 +274,7 @@ function HomeContent() {
           </div>
         </div>
 
-        {/* Product Preview Section - SMS Notifications */}
-        <div className="mt-32 mb-20">
-          <div className="bg-white rounded-2xl p-8 md:p-12 shadow-2xl">
-            <div className="max-w-6xl mx-auto">
-              <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
-                {/* SMS Image */}
-                <div className="flex-shrink-0 w-full md:w-1/2">
-                  <div className="w-full max-w-sm mx-auto bg-gray-100 rounded-lg overflow-hidden">
-                    <Image
-                      src="/sms-preview.png"
-                      alt="SMS notification preview showing automated appointment reminders from Assistly AI"
-                      width={400}
-                      height={711}
-                      className="object-contain rounded-lg w-full h-auto"
-                      priority
-                    />
-                  </div>
-                </div>
 
-                {/* SMS Disclosure Text */}
-                <div className="flex-1 text-center md:text-left">
-                  <div className="flex items-center justify-center md:justify-start gap-3 mb-6">
-                    <MessageSquare className="h-8 w-8 text-blue-600" />
-                    <h2 className="text-3xl font-bold text-gray-900">
-                      Automated Appointment Reminders
-                    </h2>
-                  </div>
-                  <p className="text-lg text-gray-700 mb-6">
-                    Stay on top of your schedule with intelligent SMS notifications sent directly to your customers.
-                  </p>
-                  <div className="bg-gray-50 border-l-4 border-blue-600 p-4 rounded-r-lg">
-                    <p className="text-sm text-gray-800 font-medium leading-relaxed">
-                      By providing your number, you agree to receive automated service notifications from Assistly AI. Msg &amp; data rates may apply. Reply STOP to opt-out. View our <Link href="/privacy" className="underline hover:text-blue-600">Privacy Policy</Link>.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </main>
 
       {/* Footer */}
