@@ -4,3 +4,4 @@ mangum
 pydantic
 supabase
 python-multipart
+openai
