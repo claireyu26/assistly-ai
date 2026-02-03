@@ -119,13 +119,14 @@ async def simulate_step(request: SimulateStepRequest):
                 "type": "function",
                 "function": {
                     "name": "update_extraction",
-                    "description": "Call this whenever you identify a new piece of information (Name, Address, or Service) to update the dashboard.",
+                    "description": "Call this whenever you identify a new piece of information (Name, Address, Service, or Time) to update the dashboard.",
                     "parameters": {
                         "type": "object",
                         "properties": {
                             "name": {"type": "string"},
                             "address": {"type": "string"},
-                            "service": {"type": "string"}
+                            "service": {"type": "string"},
+                            "time": {"type": "string"}
                         },
                         "required": []
                     }
@@ -135,7 +136,7 @@ async def simulate_step(request: SimulateStepRequest):
                 "type": "function",
                 "function": {
                     "name": "schedule_appointment",
-                    "description": "Call this ONLY when you have the Name, Address, and Service Type to finalize the booking. Summary is required.",
+                    "description": "Call this ONLY when you have the Name, Address, Service, and confirmed Time. Summary is required.",
                     "parameters": {
                         "type": "object",
                         "properties": {
@@ -152,10 +153,17 @@ async def simulate_step(request: SimulateStepRequest):
         
         system_prompt = {
             "role": "system", 
-            "content": """You are a professional assistant for 'Assistly Renovations'.
-Your mission is to extract the Customer Name, Service/Renovation Type, and Address. 
+            "content": """You are a professional scheduling expert for 'Assistly Renovations'.
+Access the current date/time (assume 2026-02-02).
+Your mission is to extract:
+1. Customer Name
+2. Service/Renovation Problem
+3. Location/Address
+4. Requested Time for Appointment
+
+Check for conflicts (simulate checking). if a time is mentioned, confirm it is available before triggering SCHEDULE.
 Ask one question at a time. Be polite but efficient.
-Once you have all three pieces of information, you MUST call the 'schedule_appointment' tool.
+Once you have all information and confirmed the time, you MUST call the 'schedule_appointment' tool.
 Do not ask for a phone number.
 """
         }

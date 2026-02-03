@@ -1,7 +1,8 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react'
-import { Activity, ShieldCheck, Play } from 'lucide-react'
+import { Activity, ShieldCheck, Play, Radio, Calendar, MessageSquare } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import IPhoneMockup from '@/components/demo/IPhoneMockup'
 import SmsFeed from '@/components/demo/SmsFeed'
 import GmailFeed from '@/components/demo/GmailFeed'
@@ -12,6 +13,35 @@ type Message = {
     content: string
 }
 
+type ExtractedData = {
+    service?: string
+    address?: string
+    time?: string
+}
+
+const FeatureBox = ({ label, icon: Icon, glow, side }: { label: string, icon: any, glow: boolean, side: 'left' | 'right' | 'bottom' }) => (
+    <motion.div
+        animate={{
+            borderColor: glow ? '#00F5FF' : 'rgba(255,255,255,0.1)',
+            boxShadow: glow ? '0 0 15px rgba(0, 245, 255, 0.3)' : 'none'
+        }}
+        className={`absolute ${side === 'left' ? '-left-40 top-1/4' : side === 'right' ? '-right-40 top-1/3' : 'bottom-0 left-1/2 -translate-x-1/2 translate-y-20'} 
+        bg-black/80 backdrop-blur border border-white/10 p-3 rounded-lg flex items-center gap-3 w-40 z-0 transition-colors duration-500`}
+    >
+        <div className={`p-2 rounded bg-slate-800 ${glow ? 'text-electric-teal' : 'text-slate-400'}`}>
+            <Icon className="w-4 h-4" />
+        </div>
+        <span className="text-xs font-bold text-slate-200 leading-tight">{label}</span>
+
+        {/* Connector Line */}
+        <div className={`absolute bg-white/20 
+            ${side === 'left' ? 'right-0 top-1/2 w-4 h-[1px] translate-x-4' :
+                side === 'right' ? 'left-0 top-1/2 w-4 h-[1px] -translate-x-4' :
+                    'top-0 left-1/2 w-[1px] h-4 -translate-y-4'}`}
+        />
+    </motion.div>
+)
+
 export default function DemoPage() {
     // State
     const [status, setStatus] = useState<string>("System Ready")
@@ -19,11 +49,12 @@ export default function DemoPage() {
     const [messages, setMessages] = useState<Message[]>([])
     const [showSuccess, setShowSuccess] = useState(false)
     const [logs, setLogs] = useState<string[]>([])
+    const [extracted, setExtracted] = useState<ExtractedData>({})
 
     // Refs
     const recognitionRef = useRef<any>(null)
     const silenceTimerRef = useRef<NodeJS.Timeout | null>(null)
-    const processingRef = useRef(false) // Semaphore to prevent double firing
+    const processingRef = useRef(false)
 
     // Initialize Speech Recognition
     useEffect(() => {
@@ -31,7 +62,7 @@ export default function DemoPage() {
             const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
             if (SpeechRecognition) {
                 const recognition = new SpeechRecognition()
-                recognition.continuous = true // Keep it open to detect silence manually
+                recognition.continuous = true
                 recognition.interimResults = true
                 recognition.lang = 'en-US'
 
@@ -42,9 +73,6 @@ export default function DemoPage() {
                 }
 
                 recognition.onend = () => {
-                    // If we stopped but didn't mean to (e.g. browser stopped it), restart if still "listening" state?
-                    // actually for this demo, onend might just mean we need to restart explicitely or we are done.
-                    // But our logic relies on the debounce timer from 'onresult'.
                     setIsListening(false)
                     if (status === 'Listening') {
                         addLog("Microphone stopped.")
@@ -56,10 +84,8 @@ export default function DemoPage() {
                     const transcript = event.results[current][0].transcript
                     const isFinal = event.results[current].isFinal
 
-                    // 1. Clear existing silence timer on every speech event
                     if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current)
 
-                    // 2. Set new 1.5s debounce timer
                     silenceTimerRef.current = setTimeout(() => {
                         if (transcript.trim().length > 0 && !processingRef.current) {
                             addLog(`Silence detected (1.5s). Processing: "${transcript}"`)
@@ -83,6 +109,7 @@ export default function DemoPage() {
         setShowSuccess(false)
         setStatus("Ready")
         setLogs([])
+        setExtracted({})
         addLog("Initializing Demo Session...")
         try {
             recognitionRef.current?.start()
@@ -93,16 +120,14 @@ export default function DemoPage() {
     }
 
     const handleSilenceTrigger = async (transcript: string) => {
-        // Stop Mic
         recognitionRef.current?.stop()
         processingRef.current = true
         setStatus("Processing")
 
-        // Optimistic UI
         const newHistory = [...messages, { role: 'user', content: transcript } as Message]
         setMessages(newHistory)
 
-        addLog(`[POST] Sending payload to /api/simulate-step...`)
+        addLog(`[POST] Sending locally to /api/simulate-step...`)
 
         try {
             const response = await fetch('/api/simulate-step', {
@@ -110,25 +135,24 @@ export default function DemoPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     text: transcript,
-                    messages: messages // Stateless persistence
+                    messages: messages
                 })
             })
 
             const data = await response.json()
             addLog(`[200 OK] Response received.`)
 
+            if (data.extracted) {
+                setExtracted(prev => ({ ...prev, ...data.extracted }))
+            }
+
             if (data.text) {
-                // Add AI response to history
                 setMessages(prev => [...prev, { role: 'assistant', content: data.text } as Message])
                 speak(data.text)
             }
 
             if (data.status === 'success') {
                 triggerSuccessSequence()
-            } else {
-                // Determine if we should listen again?
-                // For a smooth demo, maybe we wait for AI to finish speaking then listen again.
-                // implemented in 'speak' onend.
             }
 
         } catch (e) {
@@ -141,15 +165,31 @@ export default function DemoPage() {
     const triggerSuccessSequence = () => {
         setStatus("Success")
         setShowSuccess(true)
-        addLog("[SUCCESS] Appointment Confirmed. Triggering localized events.")
-        processingRef.current = false // call is done
+        addLog("[SUCCESS] Transaction Complete.")
+        processingRef.current = false
     }
 
     const speak = (text: string) => {
         if ('speechSynthesis' in window) {
             const utterance = new SpeechSynthesisUtterance(text)
+
+            // Human Voice Logic
+            const voices = window.speechSynthesis.getVoices()
+            const preferredVoice = voices.find(v =>
+                v.name.includes('Google US English') ||
+                v.name.includes('Samantha') ||
+                v.name.includes('Natural')
+            )
+
+            if (preferredVoice) {
+                utterance.voice = preferredVoice
+                addLog(`[VOICE] Using ${preferredVoice.name}`)
+            }
+
+            utterance.pitch = 1.05
+            utterance.rate = 1.0 // Slightly closer to normal speed
+
             utterance.onend = () => {
-                // If not success, restart listening for turn-taking
                 if (status !== 'Success' && status !== 'Error') {
                     setStatus("Listening")
                     processingRef.current = false
@@ -168,7 +208,7 @@ export default function DemoPage() {
     }
 
     return (
-        <div className="min-h-screen bg-deep-slate bg-noise text-slate-100 flex flex-col font-sans selection:bg-action-orange/30">
+        <div className="min-h-screen bg-deep-slate bg-noise text-slate-100 flex flex-col font-sans selection:bg-action-orange/30 overflow-hidden">
 
             {/* Header */}
             <header className="px-8 py-6 flex justify-between items-center border-b border-white/5 backdrop-blur-md sticky top-0 z-50">
@@ -178,7 +218,7 @@ export default function DemoPage() {
                     </div>
                     <div>
                         <h1 className="text-xl font-bold font-archivo tracking-tight text-white">Assistly AI <span className="text-slate-500 font-normal">| Live Demo</span></h1>
-                        <p className="text-xs text-slate-400">Stateless Voice Agent v2.1</p>
+                        <p className="text-xs text-slate-400">Stateless Voice Agent v2.2</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold font-mono">
@@ -187,10 +227,10 @@ export default function DemoPage() {
                 </div>
             </header>
 
-            <main className="flex-1 container mx-auto px-4 py-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <main className="flex-1 container mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center h-[calc(100vh-140px)]">
 
                 {/* Left: Controls & Context */}
-                <div className="lg:col-span-4 space-y-8">
+                <div className="lg:col-span-4 space-y-8 z-10">
                     <div className="space-y-4">
                         <h2 className="text-4xl font-bold font-archivo text-white leading-tight">
                             Experience the <br />
@@ -204,17 +244,17 @@ export default function DemoPage() {
                     <button
                         onClick={startDemo}
                         disabled={status === 'Listening' || status === 'Processing'}
-                        className="group relative px-8 py-4 bg-white text-deep-slate font-bold rounded-full overflow-hidden transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)]"
+                        className="group relative px-8 py-4 bg-white text-deep-slate font-bold rounded-full overflow-hidden transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)] w-full lg:w-auto"
                     >
                         <div className="absolute inset-0 bg-gradient-to-r from-action-orange to-orange-500 opacity-0 group-hover:opacity-10 transition-opacity"></div>
-                        <span className="flex items-center gap-2">
+                        <span className="flex items-center justify-center gap-2">
                             {status === 'Ready' || status === 'System Ready' ? <Play className="w-5 h-5 fill-current" /> : <Activity className="w-5 h-5 animate-spin" />}
-                            {status === 'Listening' ? 'Listening...' : status === 'Processing' ? 'Processing...' : 'Start Live Demo'}
+                            {status === 'Listening' ? 'Listening...' : status === 'Processing' ? 'Connected...' : 'Start Live Demo'}
                         </span>
                     </button>
 
                     {/* Logs */}
-                    <div className="bg-black/50 border border-white/10 rounded-xl p-4 h-48 font-mono text-xs overflow-hidden flex flex-col">
+                    <div className="bg-black/50 border border-white/10 rounded-xl p-4 h-48 font-mono text-xs overflow-hidden flex flex-col backdrop-blur-sm">
                         <div className="text-slate-500 font-bold mb-2 border-b border-white/5 pb-2">SYSTEM LOGS</div>
                         <div className="flex-1 overflow-y-auto space-y-1 text-slate-400 scrollbar-hide">
                             {logs.length === 0 && <span className="opacity-30 italic">Waiting for input...</span>}
@@ -227,21 +267,28 @@ export default function DemoPage() {
                     </div>
                 </div>
 
-                {/* Center: The Device */}
-                <div className="lg:col-span-4 flex justify-center perspective-1000">
-                    <IPhoneMockup status={status} />
+                {/* Center: The Device & Tour */}
+                <div className="lg:col-span-4 flex justify-center perspective-1000 relative">
+                    {/* Feature Callouts */}
+                    <FeatureBox label="24/7 AI Receptionist" icon={Radio} side="left" glow={status === 'Listening'} />
+                    <FeatureBox label="Instant CRM Sync" icon={MessageSquare} side="right" glow={status === 'Processing' || showSuccess} />
+                    <FeatureBox label="Calendar Orchestration" icon={Calendar} side="bottom" glow={showSuccess} />
+
+                    <div className="z-20 transform transition-transform hover:scale-105 duration-700">
+                        <IPhoneMockup status={status} />
+                    </div>
                 </div>
 
                 {/* Right: The Integrations */}
-                <div className="lg:col-span-4 space-y-6 flex flex-col justify-center h-full">
-                    <SmsFeed show={showSuccess} />
-                    <GmailFeed show={showSuccess} />
+                <div className="lg:col-span-4 space-y-6 flex flex-col justify-center h-full z-10">
+                    <SmsFeed show={showSuccess} service={extracted.service} address={extracted.address} />
+                    <GmailFeed show={showSuccess} service={extracted.service} address={extracted.address} />
                 </div>
 
             </main>
 
             {/* Compliance Footer */}
-            <footer className="py-6 border-t border-white/5 bg-black/20 backdrop-blur text-center">
+            <footer className="py-6 border-t border-white/5 bg-black/20 backdrop-blur text-center z-50">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10">
                     <ShieldCheck className="w-4 h-4 text-emerald-500" />
                     <span className="text-xs font-bold text-slate-300 tracking-wide uppercase">

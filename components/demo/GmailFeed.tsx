@@ -6,9 +6,11 @@ import { Mail, Calendar } from 'lucide-react'
 
 interface GmailFeedProps {
     show: boolean
+    address?: string
+    service?: string
 }
 
-export default function GmailFeed({ show }: GmailFeedProps) {
+export default function GmailFeed({ show, address = "123 Industrial Way", service = "Estimate" }: GmailFeedProps) {
     return (
         <div className="w-full max-w-sm">
             <h3 className="text-sm font-bold text-slate-400 mb-3 flex items-center gap-2 font-mono">
@@ -38,7 +40,7 @@ export default function GmailFeed({ show }: GmailFeedProps) {
                                 <span className="text-[10px] text-slate-500">Just now</span>
                             </div>
                             <div className="text-xs text-slate-300 leading-relaxed pl-10">
-                                <span className="font-bold">Event Created:</span> On-site Estimate @ 123 Industrial Way.
+                                <span className="font-bold">Event Created:</span> {service} @ {address}.
                                 <br />
                                 <span className="text-slate-500">Synced to Main & Tech Calendars.</span>
                             </div>
