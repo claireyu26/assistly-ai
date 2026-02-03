@@ -4,9 +4,10 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Mic, Phone, Activity, Database, CheckCircle, Terminal } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
+// Types matching Backend Pydantic models
 type Message = {
-    role: 'user' | 'ai' | 'system'
-    text: string
+    role: 'user' | 'assistant' | 'system'
+    content: string
 }
 
 type ExtractedData = {
@@ -16,14 +17,13 @@ type ExtractedData = {
 }
 
 export default function SimulatorPage() {
-    const [status, setStatus] = useState<string>("Ready")
+    const [status, setStatus] = useState<string>("System Ready")
     const [isRecording, setIsRecording] = useState(false)
     const [messages, setMessages] = useState<Message[]>([])
     const [extracted, setExtracted] = useState<ExtractedData>({ name: '', address: '', service: '' })
     const [logs, setLogs] = useState<string[]>([])
     const [leadId, setLeadId] = useState<string | null>(null)
 
-    const wsRef = useRef<WebSocket | null>(null)
     const recognitionRef = useRef<any>(null)
 
     // Initialize Speech Recognition
@@ -43,14 +43,18 @@ export default function SimulatorPage() {
 
                 recognition.onend = () => {
                     setIsRecording(false)
-                    // Note: We don't auto-restart immediately to let AI speak
                 }
 
                 recognition.onresult = (event: any) => {
                     const transcript = event.results[0][0].transcript
-                    addLog(`User heard: "${transcript}"`)
-                    addMessage('user', transcript)
-                    sendToBackend(transcript)
+                    addLog(`[MIC] User heard: "${transcript}"`)
+
+                    // Optimistic Update
+                    const newMsg: Message = { role: 'user', content: transcript }
+                    setMessages(prev => [...prev, newMsg])
+
+                    // Send to Brain
+                    sendToBackend(transcript, [...messages])
                 }
 
                 recognitionRef.current = recognition
@@ -58,62 +62,53 @@ export default function SimulatorPage() {
                 addLog("Error: Browser does not support SpeechRecognition.")
             }
         }
+    }, [messages]) // Depend on messages to send correct history? No, better to pass current state to handler
 
-        return () => {
-            if (wsRef.current) wsRef.current.close()
-        }
-    }, [])
+    const sendToBackend = async (text: string, history: Message[]) => {
+        setStatus("Processing...")
+        addLog(`[POST] Sending transcript...`)
 
-    const startSession = () => {
-        // Determine WS protocol (ws for localhost, wss for https)
-        const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
-        const host = window.location.host
-        const wsUrl = `${protocol}://${host}/api/ws/simulate-call`
+        try {
+            const response = await fetch('/api/simulate-step', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    text: text,
+                    messages: history
+                })
+            })
 
-        addLog(`Connecting to ${wsUrl}...`)
-        const ws = new WebSocket(wsUrl)
+            if (!response.ok) throw new Error(`API Error: ${response.statusText}`)
 
-        ws.onopen = () => {
-            addLog("Connected to Brain.")
-            setStatus("Connected")
-        }
+            const data = await response.json()
 
-        ws.onmessage = (event) => {
-            const msg = JSON.parse(event.data)
-
-            if (msg.type === 'audio') {
-                addMessage('ai', msg.text)
-                speak(msg.text)
-            } else if (msg.type === 'update_data') {
-                setExtracted(prev => ({ ...prev, ...msg.data }))
-                addLog(`Data Extracted: ${JSON.stringify(msg.data)}`)
-            } else if (msg.type === 'status') {
-                setStatus(msg.text)
-            } else if (msg.type === 'success') {
-                setStatus("SUCCESS")
-                if (msg.message) addLog(`HOST: ${msg.message}`)
-                setLeadId("PENDING_DB_SYNC") // In real app we'd get ID from BE
-                saveToSupabaseFinal() // Optional client-side sync verification
+            // 1. Update Logs & Extraction
+            if (Object.keys(data.extracted).length > 0) {
+                setExtracted(prev => ({ ...prev, ...data.extracted }))
+                addLog(`[SUCCESS] Data extracted: ${JSON.stringify(data.extracted)}`)
             }
-        }
 
-        ws.onclose = () => {
-            setStatus("Disconnected")
-            addLog("Connection closed.")
-        }
+            // 2. Handle AI Response
+            if (data.text) {
+                const aiMsg: Message = { role: 'assistant', content: data.text }
+                setMessages(prev => [...prev, aiMsg])
+                speak(data.text)
+            }
 
-        ws.onerror = (e) => {
-            addLog("WebSocket Error")
-            console.error(e)
-        }
+            // 3. Status handling
+            if (data.status === 'success') {
+                setStatus("SUCCESS")
+                setLeadId("CONFIRMED")
+                addLog("[SYSTEM] Appointment Scheduled!")
+                saveToSupabaseFinal() // Verification check
+            } else {
+                setStatus("System Ready")
+            }
 
-        wsRef.current = ws
-    }
-
-    const sendToBackend = (text: string) => {
-        if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-            wsRef.current.send(JSON.stringify({ text }))
-            setStatus("Processing...")
+        } catch (error) {
+            console.error(error)
+            setStatus("Error")
+            addLog(`[ERROR] ${String(error)}`)
         }
     }
 
@@ -122,17 +117,16 @@ export default function SimulatorPage() {
             setStatus("AI Speaking...")
             const utterance = new SpeechSynthesisUtterance(text)
             utterance.onend = () => {
-                setStatus("Ready")
-                // Auto-listen again after AI finishes? 
-                // For simulator, let's make user click 'Reply' or have a toggle to avoid infinite loops/feedback
-                // But user asked for "Conversation". Let's try to auto-start mic if session is active.
-                if (status !== 'Disconnected') {
+                setStatus("System Ready")
+                // Auto-listen again?
+                // For simulator, let's wait for user or maybe auto-start if desired.
+                // User requirement: "Switch Simulator...". 
+                // Implicit requirement: Conversational flow.
+                // Let's simple auto-start only if not finished.
+                if (status !== 'SUCCESS') {
+                    // slight delay
                     setTimeout(() => {
-                        try {
-                            recognitionRef.current?.start()
-                        } catch (e) {
-                            // Ignore if already started
-                        }
+                        try { recognitionRef.current?.start() } catch (e) { }
                     }, 500)
                 }
             }
@@ -149,10 +143,6 @@ export default function SimulatorPage() {
         }
     }
 
-    const addMessage = (role: 'user' | 'ai' | 'system', text: string) => {
-        setMessages(prev => [...prev, { role, text }])
-    }
-
     const addLog = (text: string) => {
         setLogs(prev => [`[${new Date().toLocaleTimeString()}] ${text}`, ...prev])
     }
@@ -164,7 +154,7 @@ export default function SimulatorPage() {
         const { data } = await supabase.from('appointments').select('*').order('created_at', { ascending: false }).limit(1)
         if (data && data[0]) {
             setLeadId(data[0].id)
-            addLog(`Simulated Lead Confirmed: ${data[0].id}`)
+            addLog(`[DB] Verified Lead ID: ${data[0].id}`)
         }
     }
 
@@ -176,10 +166,10 @@ export default function SimulatorPage() {
                         <Activity className="w-6 h-6" />
                         Assistly Sandbox Details
                     </h1>
-                    <p className="text-slate-400 text-sm">Debug Environment // Simulator v1.0</p>
+                    <p className="text-slate-400 text-sm">Debug Environment // Simulator v2.0 (HTTP Mode)</p>
                 </div>
                 <div className="flex items-center gap-4">
-                    <span className={`px-3 py-1 rounded text-xs font-bold ${status === 'Connected' || status === 'Listening...' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}`}>
+                    <span className={`px-3 py-1 rounded text-xs font-bold ${status === 'Error' ? 'bg-red-500/20 text-red-400' : 'bg-emerald-500/20 text-emerald-400'}`}>
                         {status.toUpperCase()}
                     </span>
                 </div>
@@ -190,14 +180,14 @@ export default function SimulatorPage() {
                 {/* Panel 1: Controls & Transcript */}
                 <div className="lg:col-span-1 flex flex-col gap-4">
                     <div className="bg-slate-900 border border-slate-800 rounded-lg p-6 flex flex-col gap-4 shadow-xl">
-                        <button
-                            onClick={startSession}
-                            disabled={status === 'Connected' || status === 'Listening...'}
-                            className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-lg font-bold py-4 px-6 rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-emerald-500/20"
-                        >
-                            <Phone className="w-6 h-6" />
-                            {status === 'Connected' || status === 'Listening...' ? 'Session Active' : 'Start Voice Session'}
-                        </button>
+                        {/* Status Indicator / Start Button (Visual only since it's stateless now) */}
+                        <div className="bg-slate-800 rounded p-4 text-center">
+                            <p className="text-slate-400 text-sm mb-2">System Status</p>
+                            <div className="flex items-center justify-center gap-2 text-emerald-400 font-bold">
+                                <Activity className="w-5 h-5" />
+                                {status}
+                            </div>
+                        </div>
 
                         <div className="mt-4">
                             <p className="text-xs text-slate-500 uppercase tracking-wider mb-2">Microphone Control</p>
@@ -217,7 +207,7 @@ export default function SimulatorPage() {
                             {messages.map((m, i) => (
                                 <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                     <div className={`max-w-[80%] rounded p-3 text-sm ${m.role === 'user' ? 'bg-blue-600' : 'bg-slate-800'}`}>
-                                        {m.text}
+                                        {m.content}
                                     </div>
                                 </div>
                             ))}
