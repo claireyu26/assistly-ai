@@ -139,6 +139,11 @@ export default function DemoPage() {
                 })
             })
 
+            if (!response.ok) {
+                const errText = await response.text()
+                throw new Error(errText || response.statusText)
+            }
+
             const data = await response.json()
             addLog(`[200 OK] Response received.`)
 
@@ -178,6 +183,7 @@ export default function DemoPage() {
             // Try to find a Google US English voice, or a "Natural" voice, or fallback to any Google English voice
             const preferredVoice = voices.find(v =>
                 (v.name.includes('Google') && v.lang === 'en-US') ||
+                v.name.includes('Microsoft Aria') ||
                 v.name.includes('Natural') ||
                 v.name.includes('Samantha')
             )
@@ -232,7 +238,7 @@ export default function DemoPage() {
                 </div>
             </header>
 
-            <main className="flex-1 container mx-auto px-4 py-8 flex flex-col lg:flex-row items-center justify-center gap-12 h-[calc(100vh-140px)]">
+            <main className="flex-1 container max-w-7xl mx-auto px-4 py-8 flex flex-col lg:flex-row items-start justify-center gap-16 h-[calc(100vh-140px)]">
 
                 {/* Left: Controls & Context */}
                 <div className="w-full max-w-md space-y-8 z-10 order-2 lg:order-1">
@@ -279,7 +285,7 @@ export default function DemoPage() {
                     <FeatureBox label="Instant CRM Sync" icon={MessageSquare} side="right" glow={status === 'Processing' || showSuccess} />
                     <FeatureBox label="Calendar Orchestration" icon={Calendar} side="bottom" glow={showSuccess} />
 
-                    <div className="z-20 transform transition-transform hover:scale-105 duration-700">
+                    <div className="z-10 transform transition-transform hover:scale-105 duration-700">
                         <IPhoneMockup status={status} />
                     </div>
                 </div>

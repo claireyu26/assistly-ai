@@ -1,14 +1,15 @@
+import json
+import traceback
+import os
+import asyncio
+from typing import List, Optional, Dict, Any
+
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from mangum import Mangum
 from pydantic import BaseModel
-from typing import List, Optional, Dict, Any
 from supabase import create_client, Client
 import openai
-import os
-import json
-import asyncio
-import traceback
 
 app = FastAPI()
 
