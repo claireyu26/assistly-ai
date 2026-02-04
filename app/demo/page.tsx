@@ -135,7 +135,7 @@ export default function DemoPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     text: transcript,
-                    messages: messages
+                    messages: newHistory
                 })
             })
 
@@ -175,10 +175,11 @@ export default function DemoPage() {
 
             // Human Voice Logic
             const voices = window.speechSynthesis.getVoices()
+            // Try to find a Google US English voice, or a "Natural" voice, or fallback to any Google English voice
             const preferredVoice = voices.find(v =>
-                v.name.includes('Google US English') ||
-                v.name.includes('Samantha') ||
-                v.name.includes('Natural')
+                (v.name.includes('Google') && v.lang === 'en-US') ||
+                v.name.includes('Natural') ||
+                v.name.includes('Samantha')
             )
 
             if (preferredVoice) {
@@ -187,16 +188,20 @@ export default function DemoPage() {
             }
 
             utterance.pitch = 1.05
-            utterance.rate = 1.0 // Slightly closer to normal speed
+            utterance.rate = 1.0
 
             utterance.onend = () => {
+                // Restart listening immediately unless we hit success or fatal error
                 if (status !== 'Success' && status !== 'Error') {
                     setStatus("Listening")
+                    setIsListening(true)
                     processingRef.current = false
                     try {
                         recognitionRef.current?.start()
                         addLog("Resuming conversation...")
-                    } catch (e) { }
+                    } catch (e) {
+                        // ignore if already started
+                    }
                 }
             }
             window.speechSynthesis.speak(utterance)
@@ -227,10 +232,10 @@ export default function DemoPage() {
                 </div>
             </header>
 
-            <main className="flex-1 container mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center h-[calc(100vh-140px)]">
+            <main className="flex-1 container mx-auto px-4 py-8 flex flex-col lg:flex-row items-center justify-center gap-12 h-[calc(100vh-140px)]">
 
                 {/* Left: Controls & Context */}
-                <div className="lg:col-span-4 space-y-8 z-10">
+                <div className="w-full max-w-md space-y-8 z-10 order-2 lg:order-1">
                     <div className="space-y-4">
                         <h2 className="text-4xl font-bold font-archivo text-white leading-tight">
                             Experience the <br />
@@ -268,7 +273,7 @@ export default function DemoPage() {
                 </div>
 
                 {/* Center: The Device & Tour */}
-                <div className="lg:col-span-4 flex justify-center perspective-1000 relative">
+                <div className="flex justify-center perspective-1000 relative order-1 lg:order-2">
                     {/* Feature Callouts */}
                     <FeatureBox label="24/7 AI Receptionist" icon={Radio} side="left" glow={status === 'Listening'} />
                     <FeatureBox label="Instant CRM Sync" icon={MessageSquare} side="right" glow={status === 'Processing' || showSuccess} />
@@ -280,7 +285,7 @@ export default function DemoPage() {
                 </div>
 
                 {/* Right: The Integrations */}
-                <div className="lg:col-span-4 space-y-6 flex flex-col justify-center h-full z-10">
+                <div className="w-full max-w-sm space-y-6 flex flex-col justify-center h-full z-10 order-3">
                     <SmsFeed show={showSuccess} service={extracted.service} address={extracted.address} />
                     <GmailFeed show={showSuccess} service={extracted.service} address={extracted.address} />
                 </div>

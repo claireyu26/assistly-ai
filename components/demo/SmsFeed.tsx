@@ -11,7 +11,7 @@ interface SmsFeedProps {
     address?: string
 }
 
-export default function SmsFeed({ show, businessName = "B&B Construct", service = "Remodel", address }: SmsFeedProps) {
+export default function SmsFeed({ show, businessName = "B&B Construct", service, address }: SmsFeedProps) {
     return (
         <div className="w-full max-w-sm">
             <h3 className="text-sm font-bold text-slate-400 mb-3 flex items-center gap-2 font-mono">

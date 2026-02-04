@@ -10,7 +10,7 @@ interface GmailFeedProps {
     service?: string
 }
 
-export default function GmailFeed({ show, address = "123 Industrial Way", service = "Estimate" }: GmailFeedProps) {
+export default function GmailFeed({ show, address, service }: GmailFeedProps) {
     return (
         <div className="w-full max-w-sm">
             <h3 className="text-sm font-bold text-slate-400 mb-3 flex items-center gap-2 font-mono">

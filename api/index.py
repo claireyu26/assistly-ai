@@ -101,6 +101,7 @@ def recover_state_from_history(messages: List[Message]) -> dict:
                     pass
     return state
 
+
 # --- Routes ---
 
 @app.get("/api/health")
@@ -245,13 +246,13 @@ Do not ask for a phone number.
         tb = traceback.format_exc()
         print(f"CRITICAL ERROR: {tb}")
         await log_debug("critical_error", tb)
-        # Return 200 with error info so frontend can display it in logs instead of generic 500
+        # Return 200 with structured error info so frontend doesn't crash on JSON parse
         return JSONResponse(status_code=200, content={
             "status": "error",
-            "text": f"System Error: {str(e)}",
+            "text": "I'm having trouble connecting to the scheduler. Let me try again.", 
+            "error": str(e),
             "extracted": {}, 
             "traceback": tb
         })
 
 handler = Mangum(app)
-
