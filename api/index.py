@@ -107,7 +107,7 @@ def recover_state_from_history(messages: List[Message]) -> dict:
 
 @app.get("/api/health")
 def health_check():
-    return {"status": "ok", "message": "Backend is healthy"}
+    return {"status": "ok"}
 
 @app.post("/api/simulate-step")
 async def simulate_step(request: SimulateStepRequest):

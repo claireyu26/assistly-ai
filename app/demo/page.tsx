@@ -141,6 +141,7 @@ export default function DemoPage() {
 
             if (!response.ok) {
                 const errText = await response.text()
+                addLog(`[ERROR] ${response.status} ${response.statusText}`)
                 throw new Error(errText || response.statusText)
             }
 
@@ -238,7 +239,7 @@ export default function DemoPage() {
                 </div>
             </header>
 
-            <main className="flex-1 container max-w-7xl mx-auto px-4 py-8 flex flex-col lg:flex-row items-start justify-center gap-16 h-[calc(100vh-140px)]">
+            <main className="flex-1 container max-w-screen-xl mx-auto px-4 py-8 flex flex-col lg:flex-row items-center justify-center gap-20 h-[calc(100vh-140px)]">
 
                 {/* Left: Controls & Context */}
                 <div className="w-full max-w-md space-y-8 z-10 order-2 lg:order-1">
